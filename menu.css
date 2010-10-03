@@ -1,0 +1,84 @@
+@CHARSET "UTF-8";
+
+.menuPos{
+	width: 120px;
+	height: 80px;
+	background-color: red;
+}
+
+.menuPosHidden{
+	display: none;
+}
+
+.menuActionsDiv{
+	position: absolute;
+	margin-top: 0px;
+	margin-left: 24px;
+	width: 0px;
+	overflow: hidden;
+}
+
+.menuPosAdd{
+	text-align: center;
+	width: 15px;
+	background-color: red;
+	display: none;
+}
+
+.menuPosColor{
+	display; none;
+	width: 20px;
+	height: 20px;
+	background-color: green;
+	display: none;
+}
+
+.menuPosVis{
+	display; none;
+	width: 20px;
+	height: 20px;
+	background-color: yellow;
+	display: none;
+}
+
+.menuPosDel{
+	display; none;
+	width: 20px;
+	height: 20px;
+	background-color: green;
+	display: none;
+}
+
+.menuPosActions{
+	display; none;
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	background-color: green;
+	margin-top: 2px;
+	margin-left: 2px;
+	display: none;
+}
+
+.menuPosDragOver{
+	//height: 20px;
+}
+
+/*rm menu*/
+.menu_rm_div{
+	position: absolute;
+	background-color: green;
+}
+
+.menu_rm0{
+	background-color: yellow;
+}
+.menu_rm1{
+	background-color: red;
+}
+.menu_rm2{
+	background-color: cyan;
+}
+.menu_rm2{
+	background-color: grey;
+}

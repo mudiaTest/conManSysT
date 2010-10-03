@@ -1,0 +1,195 @@
+@CHARSET "UTF-8";
+
+.infoBox{
+	display: none;
+	position:fixed;
+	background-color: red;
+	opacity: 1.0;
+	margin-top: 300px;
+	z-index: 101;
+	padding: 12px;
+	padding-top: 22px;
+}
+	.infoBox_framelt{
+		width: 10px;
+		height: 20px;
+		background-color: yellow;
+		position: absolute;
+		left: 0px;
+		top:  0px;
+	}
+	.infoBox_framect{
+		height: 20px;
+		background-color: yellow;
+		position: absolute;
+		left: 10px;
+		right:10px;
+		top:  0px;
+		overflow: hidden;
+	}
+	.infoBox_framert{
+		clear: right;
+		width: 10px;
+		height: 20px;
+		background-color: yellow;
+		position: absolute;
+		position: absolute;
+		right: 0px;
+		top:  0px;
+	}
+	.infoBox_framelc{
+		width: 10px;
+		background-color: yellow;
+		position: absolute;
+		left:   0px;
+		top:    20px;
+		bottom: 10px;
+	}
+	/*.infoBox_framec{
+		position: absolute;
+		left: 10px;
+		right:10px;
+		top:    10px;
+		bottom: 10px;
+	}*/
+	.infoBox_framerc{
+		width: 10px;
+		background-color: yellow;
+		position: absolute;
+		right:  0px;
+		top:    20px;
+		bottom: 10px;
+	}
+	.infoBox_framelb{
+		width: 10px;
+		height: 10px;
+		background-color: yellow;
+		position: absolute;
+		left:   0px;
+		bottom: 0px;
+	}
+	.infoBox_framecb{
+		height: 10px;
+		background-color: yellow;
+		position: absolute;
+		left: 10px;
+		right:10px;
+		bottom: 0px;
+	}
+	.infoBox_framerb{
+		width: 10px;
+		height: 10px;
+		background-color: yellow;
+		position: absolute;
+		right:  0px;
+		bottom: 0px;
+	}
+	.infoBox_buttonBox{
+		text-align: center;
+	}	
+	
+
+
+
+
+
+.askBox{
+	display: none;
+	position:fixed;
+	background-color: red;
+	opacity: 1.0;
+	margin-top: 100px;
+	z-index: 101;
+	padding: 12px;
+	padding-top: 22px;
+}
+	.askBox_framelt{
+		width: 10px;
+		height: 20px;
+		background-color: cyan;
+		position: absolute;
+		left: 0px;
+		top:  0px;
+	}
+	.askBox_framect{
+		height: 20px;
+		background-color: cyan;
+		position: absolute;
+		left: 10px;
+		right:10px;
+		top:  0px;
+		overflow: hidden;
+	}
+	.askBox_framert{
+		clear: right;
+		width: 10px;
+		height: 20px;
+		background-color: cyan;
+		position: absolute;
+		position: absolute;
+		right: 0px;
+		top:  0px;
+	}
+	.askBox_framelc{
+		width: 10px;
+		background-color: cyan;
+		position: absolute;
+		left:   0px;
+		top:    20px;
+		bottom: 10px;
+	}
+	/*.askBox_framec{
+		position: absolute;
+		left: 10px;
+		right:10px;
+		top:    10px;
+		bottom: 10px;
+	}*/
+	.askBox_framerc{
+		width: 10px;
+		background-color: cyan;
+		position: absolute;
+		right:  0px;
+		top:    20px;
+		bottom: 10px;
+	}
+	.askBox_framelb{
+		width: 10px;
+		height: 10px;
+		background-color: cyan;
+		position: absolute;
+		left:   0px;
+		bottom: 0px;
+	}
+	.askBox_framecb{
+		height: 10px;
+		background-color: cyan;
+		position: absolute;
+		left: 10px;
+		right:10px;
+		bottom: 0px;
+	}
+	.askBox_framerb{
+		width: 10px;
+		height: 10px;
+		background-color: cyan;
+		position: absolute;
+		right:  0px;
+		bottom: 0px;
+	}
+	.askBox_buttonBox{
+		text-align: center;
+	}		
+
+	
+.okBtn{
+	//height: 12px;
+}
+
+.takBtn{
+	//height: 12px;
+}
+
+.nieBtn{
+	//height: 12px;
+}
