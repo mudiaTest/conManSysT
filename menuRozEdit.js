@@ -170,7 +170,7 @@ function rm_MenuPosAdd(aid){
 	//newPos.nodeId = getMenuPosNodeId(menuPosList.length+1);
 	rm_addToPosList(newPos);
 	rm_addToGrpList(newPos);
-	rm_initGrpList(grpObj);
+	//rm_initGrpList(grpObj);
 	
 	rm_BudujPosMenu(newPos, getEl(grpObj.hid + suf_body), 'green');
 	

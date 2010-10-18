@@ -160,12 +160,13 @@ function rm_BudujMenu(kodHtml){
 	//czyszczenie listy grup menu
 	rm_grpList = [];
 	//budowanie listy grup pozycji menu
+	rm_DodajGrp0();
 	for (var i=0; i<rm_posList.length; i++)
 		rm_addToGrpList(rm_posList[i].obj);
 	for (var i=0; i<rm_posList.length; i++)
 		rm_addPosToGrpList(rm_posList[i].obj);
-	for (var i=0; i<rm_grpList.length; i++)
-		rm_initGrpList(rm_grpList[i]);
+	//for (var i=0; i<rm_grpList.length; i++)
+		//rm_initGrpList(rm_grpList[i]);
 		
 	if (kodHtml){
 		//czyszczenie kodu html odpowiadającego za menu
@@ -262,45 +263,29 @@ function rm_initGrpList(amenuGrp){
 	}
 }
 
-/*function rm_addToGrpList(amenuPos){
-	if (rm_GrpById(amenuPos.idParent) == null) {
-		var newGrp = clone(pr_menuPosGrp);
-		rm_grpList.push(newGrp);
-		//dzieki wczytywaniu w odpowiedniej kolejności, kolejne grupy dÄ… na rĂłwnych lub dalszych poziomach
-		newGrp.id = amenuPos.idParent;
-		newGrp.lvl = rm_dajPosLv(amenuPos);
-		newGrp.pos = new Array();
-		rm_GrpReinitId(newGrp);
-	}
-	rm_GrpById(amenuPos.idParent).pos.push(amenuPos.id);
-}*/
+function rm_DodajGrp0(){
+	var newGrp = clone(pr_menuPosGrp);
+	rm_grpList.push(newGrp);
+	newGrp.id = 0;
+	newGrp.lvl = 0;
+	newGrp.pos = new Array();
+	rm_GrpReinitId(newGrp);
+	newGrp.idParent = null;
+}
 
 function rm_addToGrpList(amenuPos){
 	if (kd2tf(amenuPos.kdBranch) && rm_GrpById(amenuPos.id) == null) {
 		var newGrp = clone(pr_menuPosGrp);
 		rm_grpList.push(newGrp);
-		//dzieki wczytywaniu w odpowiedniej kolejności, kolejne grupy dÄ… na rĂłwnych lub dalszych poziomach
 		newGrp.id = amenuPos.id;
-		newGrp.idParent = amenuPos.idParent;
 		newGrp.lvl = rm_dajPosLv(amenuPos)+1;
 		newGrp.pos = new Array();
 		rm_GrpReinitId(newGrp);
-	}
-	else if (rm_GrpById(amenuPos.idParent) == null) {
-		var newGrp = clone(pr_menuPosGrp);
-		rm_grpList.push(newGrp);
-		//dzieki wczytywaniu w odpowiedniej kolejności, kolejne grupy dÄ… na rĂłwnych lub dalszych poziomach
-		if (amenu.idParent > 0) {
-			newGrp.id = amenuPos.idParent;
-			newGrp.idParent = rm_PosById(amenuPos.idParent).idParent;
-		}
-		newGrp.lvl = rm_dajPosLv(amenuPos);
-		newGrp.pos = new Array();
-		rm_GrpReinitId(newGrp);
+		newGrp.idParent = amenuPos.idParent;
 	}
 }
 	//oddaje level pozycji
-	//jako arg podajemy id obiektu
+	//jako arg podajemy pozycję menu
 	function rm_dajPosLv(amenuPos){
 		var tmpPos = rm_PosById(amenuPos.idParent);
 		if (tmpPos == null)

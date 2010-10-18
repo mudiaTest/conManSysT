@@ -48,7 +48,8 @@ function showBlockOpac(aid, opac, timeOut){
 //ujawnia stopniowo div'a
 function showBlockGrad(aid){
 	showBlock(aid);
-	showBlockOpac(aid, 0, 50);
+	//showBlockOpac(aid, 0, 50);
+	showBlockOpac(aid, 100, 0);
 }
 
 //ukrywa div'a przez ustalenie display = none
@@ -70,7 +71,8 @@ function hideBlockOpac(aid, opac, timeOut){
 
 //ukrywa stopniowo diva
 function hideBlockGrad(aid){
-	hideBlockOpac(aid, 100, 50);
+	//hideBlockOpac(aid, 100, 50);
+	hideBlockOpac(aid, 0, 0);
 }
 
 // ??Old
