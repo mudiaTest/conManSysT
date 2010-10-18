@@ -1,6 +1,6 @@
 function doWindowResize(){
-	doInfoBoxResize();
-	doAskBoxResize();
+	//doInfoBoxResize();
+	//doAskBoxResize();
 }
 
 window.onresize = doWindowResize;
@@ -8,7 +8,7 @@ window.onresize = doWindowResize;
 var reqSleep = getXMLHttpRequest();
 reqSleep.onreadystatechange = procResponse;
 /*
-req.open('get', '/cms/dbConnCMS.php?4=1', true);
+req.open('get', '/dbConnCMS.php?4=1', true);
 //req.onreadystatechange = procResponse;
 prif = showResp;
 req.send(null);

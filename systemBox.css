@@ -179,7 +179,98 @@
 	}
 	.askBox_buttonBox{
 		text-align: center;
-	}		
+	}	
+	
+	
+	
+	
+	
+.menuOpt{
+	display: none;
+	position: absolute;
+	background-color: red;
+	opacity: 1.0;
+	z-index: 101;
+	padding: 12px;
+	padding-top: 22px;
+}
+	.menuOpt_framelt{
+		width: 10px;
+		height: 20px;
+		background-color: yellow;
+		position: absolute;
+		left: 0px;
+		top:  0px;
+	}
+	.menuOpt_framect{
+		height: 20px;
+		background-color: yellow;
+		position: absolute;
+		left: 10px;
+		right:10px;
+		top:  0px;
+		overflow: hidden;
+	}
+	.menuOpt_framert{
+		clear: right;
+		width: 10px;
+		height: 20px;
+		background-color: yellow;
+		position: absolute;
+		position: absolute;
+		right: 0px;
+		top:  0px;
+	}
+	.menuOpt_framelc{
+		width: 10px;
+		background-color: yellow;
+		position: absolute;
+		left:   0px;
+		top:    20px;
+		bottom: 10px;
+	}
+	/*.infoBox_framec{
+		position: absolute;
+		left: 10px;
+		right:10px;
+		top:    10px;
+		bottom: 10px;
+	}*/
+	.menuOpt_framerc{
+		width: 10px;
+		background-color: yellow;
+		position: absolute;
+		right:  0px;
+		top:    20px;
+		bottom: 10px;
+	}
+	.menuOpt_framelb{
+		width: 10px;
+		height: 10px;
+		background-color: yellow;
+		position: absolute;
+		left:   0px;
+		bottom: 0px;
+	}
+	.menuOpt_framecb{
+		height: 10px;
+		background-color: yellow;
+		position: absolute;
+		left: 10px;
+		right:10px;
+		bottom: 0px;
+	}
+	.menuOpt_framerb{
+		width: 10px;
+		height: 10px;
+		background-color: yellow;
+		position: absolute;
+		right:  0px;
+		bottom: 0px;
+	}
+	
+	
+		
 
 	
 .okBtn{

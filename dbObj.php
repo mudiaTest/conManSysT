@@ -4,9 +4,11 @@
 
 //podstawowy obiekt generyczny
 class dbObj{
-	var $un;
+	var $un;  //unikalny identyfikator - tylko do kontaktów z bazą danych
+	var $id;  //unikalny identyfikator, ale może być wygenerowany ręcznie, więc należy uważać co generujemy - un - > id
 	var $TableName;
-	var $parentUn;
+	var $unParent;
+	var $idParent;  //        - idRodzica
 	var $varList = array(); //lista par nazwa zmiannej-pole w db
 	var $objList = array(); //lista podobiektów
 	var $where   = '';		//wyrażenie where używane w zapytaniach
@@ -20,8 +22,9 @@ class dbObj{
 		else{
 			$this->un = $aun;
 		}
-		$this->parentUn = null;
-		$this->addList("parentUn", "parentUn");
+		$this->unParent = null;
+		$this->idParent = null;
+		$this->addList("unParent", "unParent");
 	}
 
 	//dodaje do tabeli wpis nazwa zmiannej|nazwa pola w db
@@ -97,27 +100,32 @@ class dbObj{
 	}
 
 	//ustala parent id zgodnie z praktyką dla obiektu
-	function setParentId(){
+	function setidParent(){
 	}
 
 	//przepisuje id z self do wszystkich obiektów z listy
-	function setParentIdAtChild($aList){
+	function setidParentAtChild($aList){
 		foreach($aList as $value){
-			$value->parentUn = $this->un;
+			$value->unParent = $this->un;
 			$t = 0;
 		}
 	}
 
-	//przepisuje id z self do wszystkich obiektów z lisy w argumencie jako parentId
-	function setParentIdAtObj($aList){
+	//przepisuje id z self do wszystkich obiektów z lisy w argumencie jako idParent
+	function setidParentAtObj($aList){
 		foreach($aList as $value){
 			if (isSet($this->$value)){
-				$this->$value->parentUn = $this->un;
+				$this->$value->unParent = $this->un;
 				$t = 0;
 			}
 		}
 	}
 
+	//inicjalizuje identyfikatory wg un
+	function reinitIdLvl0(){
+		$this->id = $this->un;
+		$this->idParent = $this->unParent;
+	}
 	
 	//INSERT
 
@@ -126,7 +134,7 @@ class dbObj{
 		$queryTmp = "INSERT INTO " . $this->TableName . " (";
 		$innerSQL = "";
 		foreach ($this->varList as $value){
-			if ($value["tab"]=="parentUn" && $this->$value["var"] == null){
+			if ($value["tab"]=="unParent" && $this->$value["var"] == null){
 				continue;
 			}
 			if ($innerSQL != ""){
@@ -137,7 +145,7 @@ class dbObj{
 		$queryTmp .= $innerSQL.") VALUES (";
 		$innerSQL = '';
 		foreach ($this->varList as $value){
-			if ($value["tab"]=="parentUn" && $this->$value["var"] == null){
+			if ($value["tab"]=="unParent" && $this->$value["var"] == null){
 				continue;
 			}
 			if ($innerSQL != ''){
@@ -151,15 +159,15 @@ class dbObj{
 
 	//wstawia do bazy obiekt z podobiektmi: 
 	//	dajInsertSQL
-	//	setParentId
+	//	setidParent
 	//	insertObjList (r)
 	//	insertAllChildren
 	function insertObj(){
 		$query = $this->dajInsertSQL();
 		$result = mysql_query($query)
-		or die (mysql_error());
+			or die (mysql_error());
 		$this->un = mysql_insert_id(); //ustawia wygenerowany un
-		$this->setParentId(); //wstawia un'a jako parentUn do wszystkich dzieci
+		$this->setidParent(); //wstawia un'a jako unParent do wszystkich dzieci
 		$this->insertObjList($this->objList); //wpisuje do bazy wszystkie podobiekty z listy objList
 		$this->insertAllChildren(); //wpisuje do bazy wszystkie "dzieci"
 		return $query;
@@ -194,7 +202,7 @@ class dbObj{
 		$queryTmp = "UPDATE " . $this->TableName . " SET ";
 		$innerSQL = "";
 		foreach ($this->varList as $value){
-			if ($value["tab"]=="parentUn" && $this->$value["var"] == null){
+			if ($value["tab"]=="unParent" && $this->$value["var"] == null){
 				continue;
 			}
 			if ($innerSQL != ""){
@@ -213,7 +221,7 @@ class dbObj{
 		$result = mysql_query($query)
 		or die (mysql_error());
 		$this->un = mysql_insert_id();
-		$this->setParentId();
+		$this->setidParent();
 		$this->updateObjList($this->objList);
 		$this->updateAllChildren();
 		$t = 0;
@@ -251,7 +259,7 @@ class dbObj{
 		$query = $this->dajDeleteSQL($idPole);
 		$result = mysql_query($query)
 		or die (mysql_error());
-		$this->setParentId();
+		$this->setidParent();
 		$this->deleteObjList($this->objList);
 		$this->deleteAllChildren();
 		$t = 0;
@@ -259,14 +267,14 @@ class dbObj{
 
 	function deleteChildrenList($aList){
 		$value = $aList[0];
-		$value->deleteObj("parentUn");
+		$value->deleteObj("unParent");
 		$t = 0;
 	}
 
 	function deleteObjList($aList){
 		foreach($aList as $value){
 			if (isSet($this->$value)){
-				$this->$value->deleteObj("parentUn");
+				$this->$value->deleteObj("unParent");
 				$t = 0;
 			}
 		}
@@ -294,22 +302,23 @@ class dbObj{
 			//tu parsujemy wynik
 			$this->parseResult($result);
 
-		$this->setParentId();
+		$this->setidParent();
 		$this->selectObjList($this->objList);
 		$this->selectAllChildren();
+		$this->reinitIdLvl0();
 		$t = 0;
 	}
 
 	function selectChildrenList($aList){
 		$value = $aList[0];
-		$value->selectObj("parentUn");
+		$value->selectObj("unParent");
 		$t = 0;
 	}
 
 	function selectObjList($aList){
 		foreach($aList as $value){
 			if (isSet($this->$value)){
-				$this->$value->selectObj("parentUn");
+				$this->$value->selectObj("unParent");
 				$t = 0;
 			}
 		}
@@ -326,12 +335,14 @@ class dbObj{
 			$headFields[$i] = $field->name;
 			$i++;
 		}
-		mysql_data_seek($aresult, 0);
+		mysql_data_seek($aresult, 0) 
+			or die (mysql_error());
 		return $headFields;
 	}
 
 	function parseResult($aresult){
 		$headFields = $this->parseFields($aresult);
+		mysql_data_seek($aresult, 0);
 		while ($row = mysql_fetch_array($aresult, MYSQL_NUM)) {
 			foreach($headFields as $key => $value){
 				//echo $value.":".$row[$key];
@@ -353,6 +364,38 @@ class dbObjSh extends dbObj{
 		$this->sh = $ash;
 	}
 }
+
+//klasa rozszerzona o HID i jego obsługę
+class htmlObj extends dbObjSh{
+	var $hid; //unikalny identyfikator na poziomie HTML - generowany z id
+	var $hidPrefix; //prefix dodawany, aby z id uzyskać hid 
+	
+	function __construct($ash, $aun, $hidP){
+		parent::__construct($ash, $aun);
+		$this->sh = $ash;
+		$this->hidPrefix = $hidP;
+		$this->hid = null;
+	}
+	
+	function idToHid($aid){
+		return $this->hidPrefix.'_'.$aid;
+	}
+	
+	function reinitIdLvl0(){
+		parent::reinitIdLvl0();
+		$this->hid = $this->idToHid($this->id);
+	}
+}
+
+
+
+
+
+
+
+
+
+
 
 //obiekty z tabeli T1
 class tabT1 extends dbObj{
@@ -386,11 +429,11 @@ class tabT1 extends dbObj{
 		$this->listt3[$nr] = $aobj;
 	}
 
-	function setParentId(){
-		parent::setParentId();
-		$this->setParentIdAtChild($this->listt2);
-		$this->setParentIdAtChild($this->listt3);
-		$this->setParentIdAtObj($this->objList);
+	function setidParent(){
+		parent::setidParent();
+		$this->setidParentAtChild($this->listt2);
+		$this->setidParentAtChild($this->listt3);
+		$this->setidParentAtObj($this->objList);
 	}
 
 	function insertAllChildren(){
@@ -475,16 +518,17 @@ class tabT31 extends tabT3{
 
 //tworzy wzorce klas obiektów - kopie, na ich podstawie, tworzone
 //są przez metodę clone
-function createTamplate($ash){
+function createTemplate($ash){
 	//tworzy deserializowany obiekt-wzór z podanego stringa
 	function printJSObj($name, $serObj, $ash){
 		$ash->sh("<script language='javascript'>var pr_".$name." = PHP_Unserialize('" . $serObj ."');</script>");
 	}
-	printJSObj('tabT1',   serialize(new tabT1('')  ), $ash);
+	/*printJSObj('tabT1',   serialize(new tabT1('')  ), $ash);
 	printJSObj('tabT2',   serialize(new tabT2('')  ), $ash);
 	printJSObj('tabT3',   serialize(new tabT3('')  ), $ash);
 	printJSObj('tabT30',  serialize(new tabT30('') ), $ash);
-	printJSObj('tabT31',  serialize(new tabT31('') ), $ash);
-	printJSObj('menuPos', serialize(new menuPos('', '')), $ash);
+	printJSObj('tabT31',  serialize(new tabT31('') ), $ash);*/
+	printJSObj('menuPos', serialize(new menuPos(null)), $ash);
+	printJSObj('menuPosGrp', serialize(new menuPosGrp(null)), $ash);
 }
 ?>

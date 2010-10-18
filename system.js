@@ -14,6 +14,10 @@ var ser_menuBuilder = new Array; // lista pozycji serStr menu
 
 /* FUNCT */
 
+function beep(){
+	var t = true;
+}
+
 function aa(aText){
 	alert(aText);
 }
@@ -68,9 +72,9 @@ function disDrag(el){
 }
 
 /*
- * ondragenter="return dragEnter(event)"' + ' ondrop="return dragDrop(event,
- * false)"' + ' ondragover="return dragOver(event)"' + ' ondragleave="return
- * dragLeave(event)"';
+ * ondragenter="return rm_DragEnter(event)"' + ' ondrop="return rm_DragDrop(event,
+ * false)"' + ' ondragover="return rm_DragOver(event)"' + ' ondragleave="return
+ * rm_DragLeave(event)"';
  */
 
 function getWindowW(){
@@ -163,7 +167,7 @@ function getNrChildById(node, id){
 
 function setStyle(el, style, value) {
 	// aa(el.style[style]);
-	el.style[style] = value;
+	el.style[style.replace('-','_')] = value;
 }
 
 function addPx(value){
@@ -171,7 +175,7 @@ function addPx(value){
 }
 
 function cropPx(value){
-	return value.substr(0, value.length-2);
+	return parseInt(value.substr(0, value.length-2));
 }
 
 function getXMLHttpRequest(){
@@ -214,7 +218,7 @@ function ask(aPG, aUrl, aAsynch, aprif){
 
 function askSleep(){
 	// prif = showSleepResp;
-	reqSleep.open('post', '/cms/sleep.php', false);
+	reqSleep.open('post', '/sleep.php', false);
 	reqSleep.onreadystatechange = procResponse;
 	prif = showSleepResp;
 	reqSleep.send(null);
@@ -226,9 +230,62 @@ function showResp(){
 }
 
 function showSleepResp(){
-	getEl("ans").innerHTML = "Spa�em: " + req.responseText + "/100000 sec";
+	getEl("ans").innerHTML = "Spałem: " + req.responseText + "/100000 sec";
 }
 
 function getSerializedObj(aStr){
 	return serialize(aStr);
+}
+
+function kd2tf(akd){
+	if (akd == 1) 
+		return true
+	else
+		return false
+}
+
+function tf2kd(atf){
+	if (atf) 
+		return 1
+	else
+		return 0
+}
+
+function getPointerPosition(e) {
+    e = e || window.event;
+    var cursor = {x:0, y:0};
+    if (e.pageX || e.pageY) {
+        cursor.x = e.pageX;
+        cursor.y = e.pageY;
+    } 
+    else {
+        var de = document.documentElement;
+        var b = document.body;
+        cursor.x = e.clientX + 
+            (de.scrollLeft || b.scrollLeft) - (de.clientLeft || 0);
+        cursor.y = e.clientY + 
+            (de.scrollTop || b.scrollTop) - (de.clientTop || 0);
+    }
+    return cursor;
+}
+
+
+function getElAbsoluteTopPos(el, cont){
+	var res = el.offsetTop;
+	if (el == cont)
+		return el.offsetTop
+	else if (el != cont && el != document.body)
+		return (el.offsetTop + getElAbsoluteTopPos(el.parentNode, cont))
+	else
+		return null;
+}
+
+function getElAbsoluteLeftPos(el, cont){
+	var res = el.offsetLeft;
+	if (el == cont)
+		return el.offsetLeft
+	else if (el != cont && el != document.body)
+		return (el.offsetLeft + getElAbsoluteLeftPos(el.parentNode, cont))
+	else
+		return null;
 }

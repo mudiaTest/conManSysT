@@ -14,9 +14,10 @@ var menuDivCount = 0;
 var dragIdElt = '';
 var dragIdTarget = '';
 var draggedId;
+var prvColor;
 
 // show/hide kontrolki cms'a
-function shMenu (){
+/*function shMenu (){
 	if (!vMenu){
 		menuEditOn();
 		vMenu = true;
@@ -25,19 +26,23 @@ function shMenu (){
 		menuEditOff();
 		vMenu = false;
 	}
-}
+}*/
 
 function hint(stIH){
 	getEl('hintDiv').innerHTML = stIH;
 }
 
+function hint2(stIH){
+	getEl('hintDiv2').innerHTML = getEl('hintDiv2').innerHTML + ' | ' + stIH;
+}
+
 // on kontrolek cms'a
-function menuEditOn(){
+/*function menuEditOn(){
 	for (var i=0; i<menuPosList.length; i++){
 		menuPosEditOn(i);
 		showBlockGrad('menuPosAddBtn');
 	}
-}
+}*/
 
 function menuPosEditOn(i){
 	/*
@@ -65,7 +70,7 @@ function menuPosEditOn(i){
 // off kontrolek cms'a
 function menuEditOff(){
 	for (var i=0; i<menuPosList.length; i++){
-		hideBlockGrad('menuPosAddBtn');
+		//hideBlockGrad('menuPosAddBtn');
 		menuPosEditOff(i);
 	}
 }
@@ -148,14 +153,6 @@ function MLChangedKey(i){
 	return MLChanged(tmpMPO);
 }
 
-// wyci�ga menuPoz z id Node'a; oddaje null gdy jest z�y format
-function getIdFromNodeId(anodeId){
-	if (anodeId.split("_")[0] == 'menuPos')
-		return anodeId.split("_")[1];
-	else
-		return null;	                          
-}
-
 function getMenuPosNodeId(aid){
 	return 'menuPos_' + aid;
 }
@@ -195,7 +192,7 @@ function getMenuPosListNr(aid){
 		}
 	}	
 }
-
+/*
 // funcja zmiany koloru pozycji menu
 function menuPosColorClick(aid){
 	
@@ -241,18 +238,18 @@ function menuPosVisClick(aid){
 		}
 		tmpMenuPos.dbUpdate = true;
 	}
-}
+}*/
 
 // funkcja zmiany widzialności pozycji menu
-function menuPosActionsClick(aid){
-	var tmpDiv = getEl(getMenuPosNodeId(aid) + '_menuActionsDiv');
+/*function menuPosActionsClick(aid){
+	var tmpDiv = getEl(getMenuPosNodeId(aid) + suf_actionsDiv);
 	if (cropPx(getStyle(tmpDiv, "width"))<=0)
 		setStyle(tmpDiv, "width", addPx("100"));
 	else
 		setStyle(tmpDiv, "width", addPx("0"));
-}
+}*/
 
-function menuPosAdd(){
+/*function menuPosAdd(){
 	var tmp    = menuPosList.length;
 	var place  = '';
 	var tmpIHTML = '';
@@ -271,7 +268,6 @@ function menuPosAdd(){
 	newPos.dbCreate = true;
 	newPos.nodeId = getMenuPosNodeId(menuPosList.length+1);
 	// place = newPos.nodeId;
-	// newPos.kdPoz = getNrChildById(loadTestDiv, place);
 	// menu_placeInPage(newPos);
 	menu_addToMenuPosList(newPos);	
 	menu_placeInPage(menuDiv, newPos);
@@ -284,7 +280,7 @@ function menuPosAdd(){
 	menuPosNodeSetStartStyle(newPos);
 	
 	menuPosChangeAll();
-}
+}*/
 
 function menuPosChangeAll(){
 	for (var i=0; i<menuPosList.length; i++){
@@ -296,132 +292,6 @@ function menuPosChangeAll(){
 function changePosTest(){
 	menuDiv = getEl('loadTestDiv');
 	swapNode('menuDiv_1', 'menuDiv_3');
-}
-
-function dragStart(ev, adraggedId) {
-	draggedId = adraggedId;
-	dragIdElt = '';
-	hint('dragStart /' + draggedId);
-	disHref( getEl(getMenuPosNodeId(draggedId) + '_a') );
-    ev.dataTransfer.setDragImage(ev.target,0,0);
-    hint('dragStart /');
-    return true;
-}
-
-function dragEnd(ev) {
-	hint('dragEnd');
-    // ev.dataTransfer.clearData("Text");
-    return true;
-}
-
-function dragEnter(ev) {
-	// dragIdElt = ev.dataTransfer.getData("Text");
-	// dragIdTarget = ev.target.getAttribute('id');
-	hint('dragEnter \ ' + ev.currentTarget.getAttribute('id'));
-	var divTmpL = getEl(ev.currentTarget.getAttribute('id'));
-	// dragIdElt = ev.dataTransfer.getData("Text");
-	var startH =  cropPx(getStyle(divTmpL, 'height'));
-	activateDragOver(divTmpL.id, startH, 40, 5);
-    return true;
-}
-
-function activateDragOver(aid, wysOd, wysDo, skok){
-	div = getEl(aid);
-	setStyle(div, 'height', addPx(wysOd));
-	var newWys = parseFloat(wysOd)+skok;
-	if (wysOd<wysDo){
-		setTimeout("activateDragOver('"+aid+"', "+newWys+", "+wysDo+", "+skok+")", 50);
-	}
-}
-
-function dragLeave(ev){
-	dragIdElt = ev.dataTransfer.getData("Text");
-	hint('dragLEAVE \ ' + dragIdTarget);
-	var divTmpL = getEl(ev.currentTarget.getAttribute('id'));
-	var startH =  cropPx(getStyle(divTmpL, 'height'));
-	deactivateDragOver(divTmpL.id, startH, 20, 5);
-    return true;
-}
-
-function deactivateDragOver(aid, wysOd, wysDo, skok){
-	div = getEl(aid);
-	setStyle(div, 'height', addPx(wysOd));
-	var newWys = parseFloat(wysOd)-skok;
-	if (wysOd>wysDo){
-		setTimeout("deactivateDragOver('"+aid+"', "+newWys+", "+wysDo+", "+skok+")", 50);
-	}
-}
-
-function dragOver(ev) {
-    // dragIdElt = ev.dataTransfer.getData("Text");
-    // dragIdTarget = ev.target.getAttribute('id');
-    // a1 = ev.originalTarget.getAttribute('id');
-    // a2 = self.id;
-    // a3 =
-    // hint('dragOver - ' + dragIdElt+' \ '+dragIdTarget+' \ '+a1+' \ '+a2);
-    // if( (id =='boxB' || id =='boxA') && (idelt == 'drag' || idelt=='drag2'))
-    // return false;
-    // else if( id =='boxC' && idelt == 'drag3')
-    // return false;
-    // else
-        return false;
-}
-
-function dragDrop(ev, last) {
-	var dragIdElt = ev.dataTransfer.getData("Text");
-	
-	// przeszukać wląściwośći datatranster dla poruszanego obiektu,
-	var nodeToMove = getEl(getMenuPosNodeId(draggedId)+'_div');
-	// var node = getEl(getMenuPosNameA(MLGetByUn(draggedId).kdPoz));
-	// var parent = node.parentNode.id;
-	// moveNode(node.parentNode, ev.target, getEl('loadTestDiv'), last);
-	moveMenuNode(ev.currentTarget, nodeToMove);
-	return false; // return false so the event will not be propagated to the
-					// browser
-}
-
-// przesuwa Node pozycji menu
-function moveMenuNode(target, moved){
-	// aa(target.id + ' / ' + moved.id);
-	var menuPosTarget = MLGetById(getIdFromNodeId(target.id));
-	var menuPosMoved  = MLGetById(getIdFromNodeId(moved.id));
-	var targetParent  = target.parentNode.parentNode;
-	var movedParent   = moved.parentNode;
-	var inner = moved.innerHTML;
-	var movedId = moved.id;
-	var toLastPos = false;
-	if (menuPosTarget == null)
-		toLastPos = true;
-	if (!toLastPos)
-		var targetChildNr = getNrChildById( targetParent, getMenuPosNodeId(menuPosTarget.id) + '_div' );
-	else
-		var targetChildNr = targetParent.childNodes.length - 1;
-	var movedChildNr  = getNrChildById( movedParent,  getMenuPosNodeId(menuPosMoved.id)  + '_div' );
-	var newMenuNode = document.createElement('div');
-	
-	newMenuNode.setAttribute('id', 'tmpMenuNode');
-	targetParent.appendChild(newMenuNode);
-	moved.innerHTML = '';
-	newMenuNode.innerHTML = inner;
-	newMenuNode.id = movedId;
-	moved.id = 'oldMenuPos';
-	moveChildToPos(newMenuNode, targetParent, targetChildNr);
-	movedParent.removeChild(getEl(moved.id));
-	setStyle(target, 'height', addPx(20));
-	//aa("Nowy menu move");
-	uaktualnijKdPoz(targetParent);
-	uaktualnijKdPoz(movedParent);
-}
-
-function uaktualnijKdPoz(parent){
-	var tmpId;
-	for(var i=0; i<parent.childNodes.length; i++){
-		tmpId = getIdFromNodeId(parent.childNodes[i].id); 
-		if ( tmpId == parseInt(tmpId)){
-			MLGetById(tmpId).kdPoz = i;
-			MLGetById(tmpId).dbUpdate = true;
-		}
-	}
 }
 
 function moveChildToPos(nodeToMove, parent, newPosNr){
@@ -538,7 +408,7 @@ function updateObjAfterMove(oldNr, newNr, oldNodeId, newNodeId){
 // -- pobieranie i wysyłka do DB --
 
 // zapisanie ustawień menu
-function saveMenu(){
+/*function saveMenu(){
 	var i; // petla
 	var mainGetStr = ''; // str z obiektami
 	for(var i=0; i < menuPosList.length; i++){
@@ -564,7 +434,7 @@ function resetDBActions(){
 		menuPosList[i]['obj'].dbDelete = false;	
 	}
 }
-
+*/
 // pobieranie ustawień menu
 function loadMenu(){
 	mainGetStr = "&load_menu=1";
@@ -617,10 +487,10 @@ function loadMenu(){
 		menuDiv.appendChild(newMenuPosDivNode);
 		newMenuPosDivNode.innerHTML = 
 			'<div id="menuPos_dummy_dragIn" '+
-			'ondragenter="return dragEnter(event)" '+
-			'ondrop="return dragDrop(event, false)" '+
-			'ondragover="return dragOver(event)" '+
-			'ondragleave="return dragLeave(event)"'+
+			'ondragenter="return rm_DragEnter(event)" '+
+			'ondrop="return rm_DragDrop(event, false)" '+
+			'ondragover="return rm_DragOver(event)" '+
+			'ondragleave="return rm_DragLeave(event)"'+
 			'class ="menuPosDragOver">'+
 			'WWW'+'</div>';
 	}
@@ -639,14 +509,14 @@ function printMenuPos(amenuPos){
 	
 	stIH = 
 	'<div id="' + posNodeId + '_dragIn" '+
-	'ondragenter="return dragEnter(event)" '+
-	'ondrop="return dragDrop(event, false)" '+
-	'ondragover="return dragOver(event)" '+
-	'ondragleave="return dragLeave(event)"'+
+	'ondragenter="return rm_DragEnter(event)" '+
+	'ondrop="return rm_DragDrop(event, false)" '+
+	'ondragover="return rm_DragOver(event)" '+
+	'ondragleave="return rm_DragLeave(event)"'+
 	'class ="menuPosDragOver">'+
 	'WWW'+
 	'</div>'+	
-	'<a draggable="false" ondragstart="return dragStart(event, \''+amenuPos.id+'\')" ondragend="return dragEnd(event)" '+
+	'<a draggable="false" ondragstart="return rm_DragStart(event, \''+amenuPos.id+'\')" ondragend="return rm_DragEnd(event)" '+
 	'id="' + posNodeId + '_a" href="cms" onclick="return true">'+
 		'<div id="' + posNodeId + '" class="menuPos">'+
 			'<div id="' + posNodeId + '_menuPosActions" class="menuPosActions" onClick="menuPosActionsClick(\'' + amenuPos.id + '\')">S</div>'+
@@ -701,24 +571,4 @@ function menu_addToMenuPosList(amenuPos){
 	menuPosList[tmp]['obj'] = amenuPos;	
 }
 
-// -menu rozwijane-
-function rmEnter(aid){
-	rmOverList = [];
-	//aa(listToStr(rmOverList));
-	dodajDoRmOverList(aid);
-	//aa(listToStr(rmOverList));
-	rmMenuList.forEach(closeMenu);
-}
-
-function dodajDoRmOverList(aid){
-	if (rmParentList[aid] != null){
-		rmOverList.push(rmParentList[aid]);
-		dodajDoRmOverList(rmParentList[aid]);
-	}
-}
-
-var closeMenu = function (x, idx) {
-	   //if brak w liście
-	   setStyle(getEl(x),display,'none');
-	}
 // -- inne --

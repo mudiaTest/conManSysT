@@ -11,6 +11,8 @@ function printHeader(){
 	$sh->sh('		<script type="text/javascript" src="./system.js"></script>'); 
 	$sh->sh('		<script type="text/javascript" src="./systemBox.js"></script>');   
 	$sh->sh('		<script type="text/javascript" src="./menu.js"></script>');
+	$sh->sh('		<script type="text/javascript" src="./menuRoz.js"></script>');
+	$sh->sh('		<script type="text/javascript" src="./menuRozEdit.js"></script>');
 	$sh->sh('		<script type="text/javascript" src="./finale.js"></script>');
 	$sh->sh('		<script type="text/javascript" src="./serialize.js"></script>');
 	$sh->sh('		<script type="text/javascript" src="./sys_const.js"></script>');

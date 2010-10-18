@@ -138,7 +138,10 @@ $r = new tabT1("kkk");
 			}			
 		}
 		if ($key == 'dys_load_menu' && $value == 'true'){	
-			readAllMenu($sh);
+			readAllMenu($sh, 'menuPos');
+		}
+		if ($key == 'dys_load_menuRoz' && $value == 'true'){	
+			readAllMenu($sh, 'menuPosRoz');
 		}
 	}
 	//echo "<br><br>" . $obj->list2Str() . "<bre><br>";
