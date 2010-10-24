@@ -65,7 +65,7 @@ var rm_ReDrawMenu = function(grpObj, posId){
 		setStyle(getEl(grpObj.hid), 'display', 'none')
 }
 
-// pobieranie ustawieĹ„ menu
+// pobieranie ustawie� menu
 function rm_LoadMenu(){
 	mainGetStr = "&load_menu=1";
 	postStr = "./dbConnCMS.php?dummy=0" + "&dys_load_menuRoz=true";
@@ -118,14 +118,14 @@ function rm_LoadMenu(){
 		/*var newMenuPosDivNode = document.createElement('div');
 		newMenuPosDivNode.id = 'menuPos_dummy_div';
 		menuGrp.appendChild(newMenuPosDivNode);
-		newMenuPosDivNode.innerHTML = 
-			'<div id="menuPos_dummy_dragIn" '+
-			'ondragenter="return rm_DragEnter(event)" '+
-			'ondrop="return rm_DragDrop(event, false)" '+
-			'ondragover="return rm_DragOver(event)" '+
-			'ondragleave="return rm_DragLeave(event)"'+
-			'class ="menuPosDragOver">'+
-			'WWW'+'</div>';*/
+			var menuPosDiv = document.createElement('div');
+			newMenuPosDivNode.setAttribute("id", 'rm_dummy' + suf_dragIn);
+			newMenuPosDivNode.setAttribute("ondragenter", "return rm_DragEnter(event)");
+			newMenuPosDivNode.setAttribute("ondrop", "return rm_DragDrop(event, false)");
+			newMenuPosDivNode.setAttribute("ondragover", "return rm_DragOver(event)");
+			newMenuPosDivNode.setAttribute("ondragleave", "return rm_DragLeave(event)");
+			newMenuPosDivNode.setAttribute("class", "menuPosDragOver");
+			menuPosDiv.innerHTML = 'WWW';*/
 	}
 		function getLstSerializedObj(aAns){
 			return aAns.split('<br>');
@@ -143,9 +143,9 @@ function rm_UstawCSSGrp(amenuGrp){
 		amenuGrp.left = rm_GrpById(amenuGrp.idParent).left + cropPx(getStyle(getEl(rm_GrpById(amenuGrp.idParent).hid), 'width')); //!!!
 		//pobieramy numer kolejnośÄ‡ pozycji * 20 i dodajemy TOP diva ojca
 		amenuGrp.top =  rm_GrpById(amenuGrp.idParent).top + 
-						getEl(rm_PosById(amenuGrp.id).hid+'_div').offsetTop - 
+						getEl(rm_PosById(amenuGrp.id).hid+'_div').offsetTop;/* - 
 						(getEl(rm_PosById(amenuGrp.pos[0]).hid+'_div').offsetTop);
-						// - getEl(amenuGrp.hid+'_tyt').offsetTop);
+						// - getEl(amenuGrp.hid+'_tyt').offsetTop);*/
 	}	
 		setStyle(grpDiv, "top", addPx(amenuGrp.top));
 		setStyle(grpDiv, "left", addPx(amenuGrp.left));
@@ -203,6 +203,15 @@ function rm_BudujMenu(kodHtml){
 							rm_BudujPosMenu(pos.obj, newGrpBodyDiv, color);
 					}
 			//buduj pusty div to swapa
+			var dummyDragInDiv = document.createElement('div');
+			dummyDragInDiv.setAttribute("id", 'rm_dummy_' + tmpGrp.id + '_' + suf_dragIn);
+			dummyDragInDiv.setAttribute("ondragenter", "return rm_DragEnter(event)");
+			dummyDragInDiv.setAttribute("ondrop", "return rm_DragDrop(event, false)");
+			dummyDragInDiv.setAttribute("ondragover", "return rm_DragOver(event)");
+			dummyDragInDiv.setAttribute("ondragleave", "return rm_DragLeave(event)");
+			dummyDragInDiv.setAttribute("class", "menuPosDragOver");
+			dummyDragInDiv.innerHTML = 'WWW';
+			newGrpBodyDiv.appendChild(dummyDragInDiv);
 			
 			var addPosDiv = document.createElement('div');
 			addPosDiv.setAttribute("id", tmpGrp.hid + suf_add);
@@ -212,6 +221,7 @@ function rm_BudujMenu(kodHtml){
 			newGrpDiv.appendChild(addPosDiv);	
 	
 		}
+		
 	}
 	
 	rm_grpList.sort(rm_sortGrpByLvl);
@@ -494,6 +504,16 @@ function rm_GetPrvPosKdPos(posId){
 		if (tmpPos.obj.idParent == pos.idParent &&
 			tmpPos.obj.kdPoz < pos.kdPoz &&
 			(res == null || res.kdPoz < tmpPos.obj.kdPoz))
+			res = tmpPos.obj;
+	}
+	return res;
+}
+
+function rm_GetLastPosKdPos(posId){
+	var res = null;
+	for each(tmpPos in rm_posList){
+		if (tmpPos.obj.idParent == posId &&
+			(res == null || res.kdPoz > tmpPos.obj.kdPoz))
 			res = tmpPos.obj;
 	}
 	return res;

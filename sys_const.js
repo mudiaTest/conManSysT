@@ -22,3 +22,6 @@ const moveUp   = 1;  //przesuń node w kierunku 0
 						const suf_visibility = '_Vis';
 						const suf_delete = '_Del';	*/	
 const suf_add = '_add';
+
+const const_pos = 1;
+const const_last = 2;

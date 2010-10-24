@@ -223,14 +223,22 @@ function rm_DragEnter(ev) {
 		clearTimeout(rm_ST_DDO[0]);
 		rm_ST_DDO.shift();
 	}
-	var curId = getIdFromNodeId(ev.currentTarget.getAttribute('id'));
 	hint('rm_DragEnter \ ' + ev.currentTarget.getAttribute('id'));
-	//hint2('E \ ' + rm_ST_DDO);
-	//var divTmpL = getEl(ev.currentTarget.getAttribute('id'));
 	var startH =  cropPx(getStyle(ev.currentTarget, 'height'));
+	
+	if (rm_DummyDragId(ev.currentTarget.getAttribute('id'))) {
+		var curId = getIdFromDummyNodeId(ev.currentTarget.getAttribute('id'))
+		var parentType = const_last;
+	}
+	else {
+		var curId = getIdFromNodeId(ev.currentTarget.getAttribute('id'));
+		var parentType = const_pos;
+	}
+
 	//id rodzica grupy = id grupy i 
 	// nie przenosimy na samego siebie
-	if (rm_czyMoznaPrzeniesc(draggedId, curId))
+	
+	if (rm_czyMoznaPrzeniesc(draggedId, curId, parentType))
 		rm_ActivateDragOver(ev.currentTarget.getAttribute('id'), startH, 40, 5)
 	else {
 		prvColor = getStyle(getEl(ev.currentTarget.getAttribute('id')), 'backgroundColor');
@@ -364,6 +372,18 @@ function rm_MoveMenuNode(target, moved){
 		else
 			return null;	                          
 	}
+	function getIdFromDummyNodeId(anodeId){
+		if (anodeId != null && rm_DummyDragId(anodeId))
+			return anodeId.split("_")[2];
+		else
+			return null;	                          
+	}
+	function rm_DummyDragId(anodeId){
+		if (anodeId != null && anodeId.split("_")[1] == 'dummy')
+			return true;
+		else
+			return false;
+	}
 	
 	//uaktualnia kdPoz w obiekcjie zale�nie od tego, kt�ry w kolejno�ci jest dany node
 	function rm_UaktualnijKdPoz(parent){
@@ -381,16 +401,29 @@ function rm_MoveMenuNode(target, moved){
 		}
 	}
 	
-function rm_czyMoznaPrzeniesc(dragId, curId){
-	var prvPos = rm_GetPrvPosKdPos(curId);
-	// NIE dragID -> curId
-	// NIE dragID = curId
-	// dragId nie poprzedza curId w tym samym podmenu
-	if (rm_PrzodekPotomek(dragId, curId) != 1 &&
-		dragId != curId &&
-		( prvPos == null || dragId != prvPos.id)
-		)
-		return true;
-	else
-		return false;
+function rm_czyMoznaPrzeniesc(dragId, curId, parentType){
+	if (parentType == const_pos) {
+		var prvPos = rm_GetPrvPosKdPos(curId);
+		// NIE dragID -> curId
+		// NIE dragID = curId
+		// dragId nie poprzedza curId w tym samym podmenu
+		if (rm_PrzodekPotomek(dragId, curId) != 1 &&
+		dragId != curId && (prvPos == null || dragId != prvPos.id)) 
+			return true;
+		else 
+			return false;
+	}
+	else if (parentType == const_last) {
+		var lastPos = rm_GetLastPosKdPos(curId);
+		// NIE dragID -> curId
+		// NIE dragID = curId
+		// dragId nie poprzedza curId w tym samym podmenu
+		var grp = rm_GrpById(curId);
+		
+		if (rm_PrzodekPotomek(dragId, curId) != 1 &&
+		dragId != curId && (lastPos == null || dragId != lastPos.id)) 
+			return true;
+		else 
+			return false;
+	}
 }
