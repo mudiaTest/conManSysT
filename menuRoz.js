@@ -1,8 +1,8 @@
 /**
  * @author mudia
- * 
+ *
  * Menu rozwijane
- * 
+ *
  */
 
 //zmienne globalne
@@ -22,7 +22,7 @@ function rm_Over(aid, force){
 			rm_ReDrawMenu(grpObj, aid);
 			if (grpObj.id == aid)
 				rm_UstawCSSGrp(grpObj);
-		}	
+		}
 }
 
 //zwraca kontener w ktĂłrym znajduje siÄ™ pozycja menu 
@@ -42,12 +42,12 @@ function rm_dodajPrzodkowDoShowList(aid){
 var rm_ReDrawMenu = function(grpObj, posId){
 	var res = false;
 	//wyświetl grupÄ™ jeśli:
-	//1) zawiera element.onOver	
+	//1) zawiera element.onOver
 	if ( grpObj.pos.indexOf(posId) >= 0)
 		res = true;
-	//2) zawiera element -> element.onOver	
+	//2) zawiera element -> element.onOver
 	for (var i = 0; i < grpObj.pos.length; i++) {
-		if (rm_PrzodekPotomek(posId, grpObj.pos[i]) == -1){
+		if (rm_PrzodekPotomek(posId, grpObj.pos[i], false) == -1){
 			res = true;
 			break;
 		}
@@ -57,9 +57,9 @@ var rm_ReDrawMenu = function(grpObj, posId){
 		if (posId == grpObj.id){
 			res = true;
 			break;
-		}		
+		}
 	}
-	if (res)	
+	if (res)
 		setStyle(getEl(grpObj.hid), 'display', 'block')
 	else
 		setStyle(getEl(grpObj.hid), 'display', 'none')
@@ -84,16 +84,16 @@ function rm_LoadMenu(){
 		vMenu = false;  // ustawia, ďż˝e edycja menu jest wyďż˝ďż˝czona
 		showResp();// drukuje odpowiedz w div 'ans'
 		lstSerializedObj = getLstSerializedObj(getEl("test").innerHTML);
-		
+
 		menuGrp.innerHTML = '';
-		
+
 		// wyczyszczenie listy menuPos
 		for (var i=rm_posList.length-1; i>=0; i--){
 			rm_posList[i]['obj'].free;
 			rm_posList[i].free;
 			rm_posList.pop();
 		}
-		
+
 		// zbudowanie od nowa menu z wgranych pozycji
 		nr = 0;
 		for (var i=0; i<lstSerializedObj.length; i++){
@@ -109,11 +109,11 @@ function rm_LoadMenu(){
 		beep();
 		//budowanie menu
 		rm_BudujMenu(true);
-		
+
 		/*for (var i=0; i<rm_posList.length; i++)
 			rm_placeMenuInPage(rm_posList[i].obj);*/
 		beep();
-		
+
 		//dodanie ostatniej dummy pozycji - do przesuniďż˝cia pozycji menu na koniec
 		/*var newMenuPosDivNode = document.createElement('div');
 		newMenuPosDivNode.id = 'menuPos_dummy_div';
@@ -130,7 +130,7 @@ function rm_LoadMenu(){
 		function getLstSerializedObj(aAns){
 			return aAns.split('<br>');
 		}
-	
+
 //ustawia wartości CSS grup menu 	
 function rm_UstawCSSGrp(amenuGrp){
 	var grpDiv = getEl(rm_GrpById(amenuGrp.id).hid);
@@ -142,19 +142,19 @@ function rm_UstawCSSGrp(amenuGrp){
 		//pobieramy LEFT diva ojca i dodajemy 100 do szerokości
 		amenuGrp.left = rm_GrpById(amenuGrp.idParent).left + cropPx(getStyle(getEl(rm_GrpById(amenuGrp.idParent).hid), 'width')); //!!!
 		//pobieramy numer kolejnośÄ‡ pozycji * 20 i dodajemy TOP diva ojca
-		amenuGrp.top =  rm_GrpById(amenuGrp.idParent).top + 
-						getEl(rm_PosById(amenuGrp.id).hid+'_div').offsetTop;/* - 
+		amenuGrp.top =  rm_GrpById(amenuGrp.idParent).top +
+						getEl(rm_PosById(amenuGrp.id).hid+'_div').offsetTop;/* -
 						(getEl(rm_PosById(amenuGrp.pos[0]).hid+'_div').offsetTop);
 						// - getEl(amenuGrp.hid+'_tyt').offsetTop);*/
-	}	
+	}
 		setStyle(grpDiv, "top", addPx(amenuGrp.top));
 		setStyle(grpDiv, "left", addPx(amenuGrp.left));
 		setStyle(grpDiv, "position", 'absolute');
 }
-		
+
 // wstawia pozycje menu do list i do HTMLa
 function rm_BudujMenu(kodHtml){
-	
+
 	//sortujemy listÄ™ RM po kdPoz (asc)
 	rm_posList.sort(rm_sortBykdPoz);
 	//czyszczenie listy grup menu
@@ -167,13 +167,13 @@ function rm_BudujMenu(kodHtml){
 		rm_addPosToGrpList(rm_posList[i].obj);
 	//for (var i=0; i<rm_grpList.length; i++)
 		//rm_initGrpList(rm_grpList[i]);
-		
+
 	if (kodHtml){
 		//czyszczenie kodu html odpowiadającego za menu
 		rm_WyczyscMenu();
 		for (var i = 0; i < rm_grpList.length; i++) {
 			var tmpGrp = rm_grpList[i];
-			
+
 			switch(i) {
 			case 0:
 				var color = 'red';
@@ -188,16 +188,16 @@ function rm_BudujMenu(kodHtml){
 				var color = 'yellow';
 				break;
 			}
-				
+
 			var newGrpDiv = document.createElement('div');
 			newGrpDiv.setAttribute("id", tmpGrp.hid);
 			getEl('rm_div').appendChild(newGrpDiv);
 			//rm_GrpDodajTytul(tmpGrp, newGrpDiv);
-					
+
 				var newGrpBodyDiv = document.createElement('div');
 				newGrpBodyDiv.setAttribute("id", tmpGrp.hid + suf_body);
 				newGrpDiv.appendChild(newGrpBodyDiv);
-			
+
 					for each (var pos in rm_posList){
 						if (pos.obj.idParent == tmpGrp.id)
 							rm_BudujPosMenu(pos.obj, newGrpBodyDiv, color);
@@ -210,26 +210,26 @@ function rm_BudujMenu(kodHtml){
 			dummyDragInDiv.setAttribute("ondragover", "return rm_DragOver(event)");
 			dummyDragInDiv.setAttribute("ondragleave", "return rm_DragLeave(event)");
 			dummyDragInDiv.setAttribute("class", "menuPosDragOver");
-			dummyDragInDiv.innerHTML = 'WWW';
+			//dummyDragInDiv.innerHTML = 'WWW';
 			newGrpBodyDiv.appendChild(dummyDragInDiv);
-			
+
 			var addPosDiv = document.createElement('div');
 			addPosDiv.setAttribute("id", tmpGrp.hid + suf_add);
 			addPosDiv.setAttribute("onClick", 'rm_MenuPosAdd('+tmpGrp.id+')');
 			addPosDiv.setAttribute("class", 'menuPosAdd');
 			addPosDiv.innerHTML = '+';
-			newGrpDiv.appendChild(addPosDiv);	
-	
+			newGrpDiv.appendChild(addPosDiv);
+
 		}
-		
+
 	}
-	
+
 	rm_grpList.sort(rm_sortGrpByLvl);
 	for (var i=0; i<rm_grpList.length; i++)
 		rm_UstawCSSGrp(rm_grpList[i]);
 	for (var i=0; i<rm_posList.length; i++)
 		rm_UstawCSSPos(rm_posList[i].obj);
-			
+
 }
 
 function rm_WyczyscMenu(){
@@ -259,7 +259,7 @@ function rm_BudujPosMenu(pos, divGrp, color){
 function rm_addToPosList(amenuPos){
 	var tmp = rm_posList.length;
 	rm_posList[tmp] = new Array;
-	rm_posList[tmp]['obj'] = amenuPos;	
+	rm_posList[tmp]['obj'] = amenuPos;
 }
 
 //inicjalizacja pustych wartości w rm_grpList
@@ -300,14 +300,14 @@ function rm_addToGrpList(amenuPos){
 		var tmpPos = rm_PosById(amenuPos.idParent);
 		if (tmpPos == null)
 			return(0)
-		else	
+		else
 			return (rm_dajPosLv(tmpPos) + 1);
 	}
-	
+
 function rm_addPosToGrpList(amenuPos){
 	rm_GrpById(amenuPos.idParent).pos.push(amenuPos.id);
 }
-	
+
 function rm_UstawCSSPos(amenuPos){
 	var menuPosNodeId = getMenuPosNodeId(amenuPos.id);
 	setStyle(getEl(amenuPos.hid + suf_body), "backgroundColor", amenuPos.stColor);
@@ -317,14 +317,14 @@ function rm_UstawCSSPos(amenuPos){
 	else if (amenuPos.kdVisible == 0){
 		setStyle(getEl(amenuPos.hid + suf_body), "opacity", "0.85");
 	}
-	
+
 	var obj = null;
 	if (amenuPos.idParent > 0) {
 		obj = getEl(rm_PosById(amenuPos.idParent).hid + suf_body);
-		if (obj != null) 
+		if (obj != null)
 			var parDisp = getStyle(obj, "display")
 	}
-	
+
 	if (!vMenu && (amenuPos.kdVisible == 0 || (obj != null && parDisp == "none")) ) {
 		setStyle(getEl(amenuPos.hid + suf_body), "display", "none");
 		setStyle(getEl(amenuPos.hid + suf_dragIn), "display", "none");
@@ -355,15 +355,15 @@ function rm_SaveMenu(){
 	// dodanie do post/get obiektu do przekazania
 	function rm_getPosToSave(pos){
 		var t = serialize(pos);
-		return ("&obj_" + pos.id + "=" + serialize(pos)); 
+		return ("&obj_" + pos.id + "=" + serialize(pos));
 	}
-	
+
 function rm_resetDBActions(){
 	for (var i=0; i<rm_posList.length; i++){
 		rm_posList[i]['obj'].dbSelect = false;
 		rm_posList[i]['obj'].dbCreate = false;
 		rm_posList[i]['obj'].dbUpdate = false;
-		rm_posList[i]['obj'].dbDelete = false;	
+		rm_posList[i]['obj'].dbDelete = false;
 	}
 }
 
@@ -433,7 +433,7 @@ function rm_sortGrpByLvl(a, b) {
 function rm_SortGrpListByLvl(){
 	var tmpGrpList = new Array();
 	for (var i=0; i<rm_grpList.length; i++){
-		
+
 	}
 }
 
@@ -464,36 +464,38 @@ function rm_PosById(wartosc){
 //jeśli asked -> current  to -1
 //jeśli current -> asked to 1
 //jeśli niespokrewnione to 0
-function rm_PrzodekPotomek(current, asked){
-	if (rm_MaPrzodka(current, asked)) 
+function rm_PrzodekPotomek(current, asked, grupMode){
+	if (rm_MaPrzodka(current, asked, grupMode))
 		return -1
-	else if (rm_MaPotomka(current, asked)) 
+	else if (rm_MaPotomka(current, asked, grupMode))
 		return 1
 	else
 		return 0;
 }
 
 //jeśli asked -> current
-function rm_MaPrzodka(current, asked){
+function rm_MaPrzodka(current, asked, grupMode){
 	var curPos = rm_PosById(current);
 	//var askPos = rm_PosById(asked);
-	if (curPos.idParent == null || curPos.idParent == 0 || curPos.idParent == '0')
-		return false
-	else if (curPos.idParent == asked)
+    if (curPos.idParent == asked)
 		return true
-	else 
+	else if (curPos.idParent == null || curPos.idParent == 0 || curPos.idParent == '0')
+		return false
+	///else if (curPos.idParent == asked)
+	//	return true
+	else
 		return rm_MaPrzodka(curPos.idParent, asked);
 }
 
 //jeśli current -> asked
-function rm_MaPotomka(current, asked){
+function rm_MaPotomka(current, asked, grupMode){
 	var askPos = rm_PosById(asked);
-	if (askPos.idParent == current) 
+	if (askPos.idParent != undefined && askPos.idParent != null && askPos.idParent == current)
 		return true
-	else if (askPos.idParent == null || askPos.idParent == 0 || askPos.idParent == '0')
+	else if (askPos.idParent == undefined || askPos.idParent == null || askPos.idParent == 0 || askPos.idParent == '0')
 		return false
 	else
-		return rm_MaPotomka(current, askPos.idParent);	
+		return rm_MaPotomka(current, askPos.idParent);
 }
 
 //oddaje obiekt poprzedający (w danym podmenu) obiekt zadany
@@ -527,7 +529,7 @@ function rm_PrintMenuPos(amenuPos, grpDiv, color){
 	menuPosContainer.setAttribute("ondragover", "rm_Over('" + amenuPos.id + "', false)");
 	menuPosContainer.setAttribute("class", "menuPosContainer");
 	grpDiv.appendChild(menuPosContainer);
-	
+
 		var menuPosDiv = document.createElement('div');
 		menuPosDiv.setAttribute("id", amenuPos.hid + suf_dragIn);
 		menuPosDiv.setAttribute("ondragenter", "return rm_DragEnter(event)");
@@ -537,7 +539,7 @@ function rm_PrintMenuPos(amenuPos, grpDiv, color){
 		menuPosDiv.setAttribute("class", "menuPosDragOver");
 		//menuPosDiv.innerHTML = 'WWW';
 		menuPosContainer.appendChild(menuPosDiv);
-			
+
 		var menuPosA = document.createElement('div');
 		menuPosA.setAttribute("id", amenuPos.hid + suf_a);
 		menuPosA.setAttribute("draggable", "false");
@@ -547,17 +549,17 @@ function rm_PrintMenuPos(amenuPos, grpDiv, color){
 		menuPosA.setAttribute("class", "menuPosA");
 		menuPosA.setAttribute("onclick", "return true");
 		menuPosContainer.appendChild(menuPosA);
-			
+
 		var menuPosSubMenu= document.createElement('div');
 		menuPosSubMenu.setAttribute("id", amenuPos.hid + suf_subMenu);
 		menuPosSubMenu.setAttribute("class", "menuPosSubMenu");
 		menuPosContainer.appendChild(menuPosSubMenu);
-				
+
 			var menuPosBody= document.createElement('div');
 			menuPosBody.setAttribute("id", amenuPos.hid + suf_body);
 			menuPosBody.setAttribute("class", "menuPos");
 			menuPosA.appendChild(menuPosBody);
-			
+
 				var menuPosText= document.createElement('div');
 				menuPosText.setAttribute("id", amenuPos.hid + suf_text);
 				//menuPosText.setAttribute("class", "menuPos");
@@ -566,8 +568,8 @@ function rm_PrintMenuPos(amenuPos, grpDiv, color){
 					menuPosText.innerHTML = menuPosText.innerHTML + '<br>&gt;&gt;';
 				}
 				menuPosBody.appendChild(menuPosText);
-			
-			
+
+
 				rm_AddMenuEditPanel(menuPosBody, amenuPos);
 }
 
@@ -579,18 +581,18 @@ function rm_PrintMenuPos(amenuPos, grpDiv, color){
 		menuPosActions.setAttribute("class", "menuPosActions");
 		menuPosActions.innerHTML = '>>';
 		menuPosDiv.appendChild(menuPosActions);
-		
+
 		var menuPosActionsDiv= document.createElement('div');
 		menuPosActionsDiv.setAttribute("id", amenuPos.hid + suf_actionsDiv);
 		menuPosActionsDiv.setAttribute("class", "menuActionsDiv");
 		/*menuPosActionsDiv.innerHTML = 'Menu edycji';*/
 		menuPosDiv.appendChild(menuPosActionsDiv);
-		
+
 			//rm_AddMenuEditRow(menuPosActionsDiv, amenuPos, suf_color, 'menuPosColor', "rm_MenuPosColorClick('" + amenuPos.id + "')", 'C');
 			//rm_AddMenuEditRow(menuPosActionsDiv, amenuPos, suf_visibility, 'menuPosVis', "rm_MenuPosVisClick('" + amenuPos.id + "')", 'V');
 			//rm_AddMenuEditRow(menuPosActionsDiv, amenuPos, suf_delete, 'menuPosDel', "rm_MenuPosDelClick('" + amenuPos.id + "')", 'X');
 	}
-	
+
 		function rm_AddMenuEditRow(menuPosActionsDiv, amenuPos, asufix, aclass, aonClick, atext){
 			var menuPosAction= document.createElement('div');
 			menuPosAction.setAttribute("id", amenuPos.hid+asufix);

@@ -10,7 +10,7 @@
 	}
 	
 	.menuPosA{
-		float: left;
+		/*float: left;*/
 	}
 	
 	.menuPosSubMenu{
@@ -19,7 +19,7 @@
 	}
 	
 	.menuPosActions{
-		display; none;
+		display: none;
 		position: absolute;
 		width: 20px;
 		height: 20px;
@@ -48,7 +48,7 @@
 }
 
 .menuPosColor{
-	display; none;
+	display: none;
 	
 	width: 20px;
 	height: 20px;
@@ -57,7 +57,7 @@
 }
 
 .menuPosVis{
-	display; none;
+	display: none;
 	width: 20px;
 	height: 20px;
 	background-color: yellow;
@@ -65,7 +65,7 @@
 }
 
 .menuPosDel{
-	display; none;
+	display: none;
 	width: 20px;
 	height: 20px;
 	background-color: green;
@@ -76,6 +76,7 @@
 
 .menuPosDragOver{
 	height: 5px;
+    background-color: cyan;
 }
 
 /*rm menu*/

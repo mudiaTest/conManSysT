@@ -13,9 +13,9 @@ var vMenu = false;
 var menuDivCount = 0;
 var dragIdElt = '';
 var dragIdTarget = '';
-var draggedId;
+var draggedId = null;
+var ddss;
 var prvColor;
-
 // show/hide kontrolki cms'a
 /*function shMenu (){
 	if (!vMenu){
@@ -492,7 +492,8 @@ function loadMenu(){
 			'ondragover="return rm_DragOver(event)" '+
 			'ondragleave="return rm_DragLeave(event)"'+
 			'class ="menuPosDragOver">'+
-			'WWW'+'</div>';
+			//'WWW'+
+            '</div>';
 	}
 		function getLstSerializedObj(aAns){
 			return aAns.split('<br>');
@@ -514,7 +515,7 @@ function printMenuPos(amenuPos){
 	'ondragover="return rm_DragOver(event)" '+
 	'ondragleave="return rm_DragLeave(event)"'+
 	'class ="menuPosDragOver">'+
-	'WWW'+
+	//'WWW'+
 	'</div>'+	
 	'<a draggable="false" ondragstart="return rm_DragStart(event, \''+amenuPos.id+'\')" ondragend="return rm_DragEnd(event)" '+
 	'id="' + posNodeId + '_a" href="cms" onclick="return true">'+

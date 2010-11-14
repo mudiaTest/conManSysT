@@ -7,6 +7,7 @@ function printHeader(){
 	$sh->sh('		<link rel="stylesheet" type="text/css" href="./system.css">');
 	$sh->sh('		<link rel="stylesheet" type="text/css" href="./systemBox.css">');
 	$sh->sh('		<link rel="stylesheet" type="text/css" href="./menu.css">');
+	$sh->sh('		<link rel="stylesheet" type="text/css" href="./main.css">');
 	$sh->sh('		<link type="text/css" href="css/basic.css" rel="stylesheet" media="screen" />');
 	$sh->sh('		<script type="text/javascript" src="./system.js"></script>'); 
 	$sh->sh('		<script type="text/javascript" src="./systemBox.js"></script>');   

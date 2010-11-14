@@ -2,6 +2,7 @@
 
 var rm_ST_ADO = new Array();
 var rm_ST_DDO = new Array();
+var rm_ds;
 
 // show/hide kontrolki cms'a
 function shMenu (){
@@ -74,7 +75,7 @@ function rm_MenuPosEditOff(apos){
 	rm_UstawCSSPos(apos);
 }
 
-// funkcja zmiany widzialności pozycji menu
+// funkcja zmiany widzialnoĹ›ci pozycji menu
 function rm_MenuPosActionsClick(aid){
 	var pos = rm_PosById(aid);
 	var tmpDiv = getEl(pos.hid + suf_actionsDiv);
@@ -100,7 +101,7 @@ function rm_MenuPosColorClick(aid){
 	}
 }
 
-// funkcja zmiany widzialności pozycji menu
+// funkcja zmiany widzialnoĹ›ci pozycji menu
 function rm_MenuPosVisClick(aid){
 	var pos = rm_PosById(aid);
 	var tmpDivBody = getEl(pos.hid + suf_body);
@@ -201,7 +202,9 @@ function rm_MaxPosIdWLiscie(){
 // DRAG
 
 function rm_DragStart(ev, adraggedId) {
+    var t = 0;
 	draggedId = adraggedId;
+    dss = adraggedId;
 	dragIdElt = '';
 	hint('rm_DragStart /' + draggedId);
 	ev.dataTransfer.setData("Text", "dummy");
@@ -209,36 +212,32 @@ function rm_DragStart(ev, adraggedId) {
 	disHref( getEl(rm_PosById(draggedId).hid + suf_a) );
     //ev.dataTransfer.setDragImage(ev.target,0,0);
     hint('rm_DragStart /');
+    rm_ds = true;
     return true;
 }
 
 function rm_DragEnd(ev) {
 	hint('rm_DragEnd');
     //ev.dataTransfer.clearData("Text");
+    rm_ds = false;
+    draggedId = null;
     return true;
 }
 
 function rm_DragEnter(ev) {
+    var t='p';
+    ddss = '0';
 	while (rm_ST_DDO.length>0){
 		clearTimeout(rm_ST_DDO[0]);
 		rm_ST_DDO.shift();
 	}
 	hint('rm_DragEnter \ ' + ev.currentTarget.getAttribute('id'));
 	var startH =  cropPx(getStyle(ev.currentTarget, 'height'));
-	
-	if (rm_DummyDragId(ev.currentTarget.getAttribute('id'))) {
-		var curId = getIdFromDummyNodeId(ev.currentTarget.getAttribute('id'))
-		var parentType = const_last;
-	}
-	else {
-		var curId = getIdFromNodeId(ev.currentTarget.getAttribute('id'));
-		var parentType = const_pos;
-	}
 
 	//id rodzica grupy = id grupy i 
 	// nie przenosimy na samego siebie
 	
-	if (rm_czyMoznaPrzeniesc(draggedId, curId, parentType))
+	if (rm_czyMoznaPrzeniesc(draggedId, ev))
 		rm_ActivateDragOver(ev.currentTarget.getAttribute('id'), startH, 40, 5)
 	else {
 		prvColor = getStyle(getEl(ev.currentTarget.getAttribute('id')), 'backgroundColor');
@@ -309,13 +308,14 @@ function rm_DragOver(ev) {
 
 function rm_DragDrop(ev, last) {
 	var dragIdElt = ev.dataTransfer.getData("Text");
-	var curId = getIdFromNodeId(ev.currentTarget.getAttribute('id'));
-	// przeszukać wląściwośći datatranster dla poruszanego obiektu,
+	//var curId = getIdFromNodeId(ev.currentTarget.getAttribute('id'));
+	// przeszukaÄ‡ wlÄ…Ĺ›ciwoĹ›Ä‡i datatranster dla poruszanego obiektu,
 	var nodeToMove = getEl(rm_PosById(draggedId).hid + suf_container);
 	// var node = getEl(getMenuPosNameA(MLGetByUn(draggedId).kdPoz));
 	// var parent = node.parentNode.id;
 	// moveNode(node.parentNode, ev.target, getEl('loadTestDiv'), last);
-	if (rm_czyMoznaPrzeniesc(draggedId, curId))
+
+	if (rm_czyMoznaPrzeniesc(draggedId, ev))
 		rm_MoveMenuNode(ev.currentTarget, nodeToMove);
 	else {
 		//ev.dataTransfer.setData("Text", "");//getStyle(getEl(ev.currentTarget.getAttribute('id')), 'backgroundColor'));
@@ -326,46 +326,78 @@ function rm_DragDrop(ev, last) {
 					// browser
 }
 
-// przesuni�cie pozycji
+// przesuniďż˝cie pozycji
 
 // przesuwa Node pozycji menu
 function rm_MoveMenuNode(target, moved){
-	// aa(target.id + ' / ' + moved.id);
-	var posTarget = rm_PosById(getIdFromNodeId(target.id));
-	var posMoved  = rm_PosById(getIdFromNodeId(moved.id));
-	var targetParent  = target.parentNode.parentNode;
-	var movedParent   = moved.parentNode;
-	var inner = moved.innerHTML;
-	var movedId = moved.id;
-	var toLastPos = false;
-	if (posTarget == null)
-		toLastPos = true;
-	if (!toLastPos)
-		var targetChildNr = getNrChildById( targetParent, posTarget.hid + suf_container );
-	else
-		var targetChildNr = targetParent.childNodes.length - 1;
-	var movedChildNr  = getNrChildById( movedParent, posMoved.hid + suf_container );
-	var newMenuNode = document.createElement('div');
-	
-	newMenuNode.setAttribute('id', 'tmpMenuNode');
-	targetParent.appendChild(newMenuNode);
-	moved.innerHTML = '';
-	newMenuNode.innerHTML = inner;
-	newMenuNode.id = movedId;
-	moved.id = 'oldMenuPos';
-	moveChildToPos(newMenuNode, targetParent, targetChildNr);
-	movedParent.removeChild(getEl(moved.id));
-	setStyle(target, 'height', addPx(20));
-	//aa("Nowy menu move");
-	posMoved.unParent = posTarget.unParent;
-	posMoved.idParent = posTarget.idParent;
-	rm_UaktualnijKdPoz(targetParent);
-	if (targetParent.id != movedParent.id) 
-		rm_UaktualnijKdPoz(movedParent);
-	rm_BudujMenu(true);
+    if (rm_DummyDragId(getIdFromNodeId(target.id))){
+
+    }
+    else{
+        // aa(target.id + ' / ' + moved.id);
+        var posTarget = rm_PosById(getIdFromNodeId(target.id));
+        var posMoved  = rm_PosById(getIdFromNodeId(moved.id));
+        var inner = moved.innerHTML;
+        var movedId = moved.id;
+        var movedClass = moved.Class;
+        var movedOnOver = moved.onmouseover;
+        var toLastPos = false;
+        if (posTarget == null)
+            toLastPos = true;
+
+
+        var movedParent   = moved.parentNode;
+        if (!toLastPos){
+            var targetParent  = target.parentNode.parentNode;
+            var targetChildNr = getNrChildById( targetParent, posTarget.hid + suf_container );
+        }
+        else{
+            var targetObj = rm_GrpById(getIdFromDummyNodeId(target.id));
+            targetParent = getEl(targetObj.hid + suf_body);
+            var targetChildNr = targetParent.childNodes.length - 1;
+        }
+        var movedChildNr  = getNrChildById( movedParent, posMoved.hid + suf_container );
+
+        //wypełnienie wartościami nowej pozytcji - głównie przepisanie ich ze starej
+        var newMenuNode = document.createElement('div');
+        newMenuNode.id = 'tmpMenuNode';
+        newMenuNode.class = movedClass;
+        newMenuNode.onMouseOver = movedOnOver;
+        targetParent.appendChild(newMenuNode);
+        moved.innerHTML = '';
+        newMenuNode.innerHTML = inner;
+        newMenuNode.id = movedId;
+        moved.id = 'oldMenuPos';
+
+        moveChildToPos(newMenuNode, targetParent, targetChildNr);
+        movedParent.removeChild(getEl(moved.id)); //usuwa starą pozycję id do usunięcia
+
+        if (!toLastPos){
+            setStyle(target, 'height', addPx(20));
+        }
+        else{  
+        }
+
+        if (toLastPos){
+            posMoved.unParent = targetObj.un;
+            posMoved.idParent = targetObj.id;
+        }
+        else{
+            posMoved.unParent = posTarget.unParent;
+            posMoved.idParent = posTarget.idParent;
+        }
+
+
+
+
+        rm_UaktualnijKdPoz(targetParent);
+        if (targetParent.id != movedParent.id)
+            rm_UaktualnijKdPoz(movedParent);
+        rm_BudujMenu(true);
+    }
 }
 
-	// wyci�ga id pozycji z id Node'a; oddaje null gdy jest z�y format
+	// wyciďż˝ga id pozycji z id Node'a; oddaje null gdy jest zďż˝y format
 	function getIdFromNodeId(anodeId){
 		if (anodeId != null && anodeId.split("_")[0] == pr_menuPos.hidPrefix)
 			return anodeId.split("_")[1];
@@ -385,7 +417,7 @@ function rm_MoveMenuNode(target, moved){
 			return false;
 	}
 	
-	//uaktualnia kdPoz w obiekcjie zale�nie od tego, kt�ry w kolejno�ci jest dany node
+	//uaktualnia kdPoz w obiekcjie zaleďż˝nie od tego, ktďż˝ry w kolejnoďż˝ci jest dany node
 	function rm_UaktualnijKdPoz(parent){
 		var tmpId;
 		var pos = 0;
@@ -401,28 +433,41 @@ function rm_MoveMenuNode(target, moved){
 		}
 	}
 	
-function rm_czyMoznaPrzeniesc(dragId, curId, parentType){
+function rm_czyMoznaPrzeniesc(dragId, ev){
+
+    if (rm_DummyDragId(ev.currentTarget.getAttribute('id'))) {
+		var curId = getIdFromDummyNodeId(ev.currentTarget.getAttribute('id'));
+		var parentType = const_last;
+	}
+	else {
+		var curId = getIdFromNodeId(ev.currentTarget.getAttribute('id'));
+		var parentType = const_pos;
+    }
+
+    //w tym przypadku curId to id pozycji menu
 	if (parentType == const_pos) {
 		var prvPos = rm_GetPrvPosKdPos(curId);
 		// NIE dragID -> curId
 		// NIE dragID = curId
 		// dragId nie poprzedza curId w tym samym podmenu
-		if (rm_PrzodekPotomek(dragId, curId) != 1 &&
-		dragId != curId && (prvPos == null || dragId != prvPos.id)) 
-			return true;
+		if (rm_PrzodekPotomek(dragId, curId, false) != 1 &&
+		    dragId != curId && (prvPos == null || dragId != prvPos.id))
+			return true
 		else 
 			return false;
 	}
+    //w tym przypadku curId tp id grupy, więc dragId zmieniamy na id grupy w której się zawiera
 	else if (parentType == const_last) {
 		var lastPos = rm_GetLastPosKdPos(curId);
 		// NIE dragID -> curId
 		// NIE dragID = curId
 		// dragId nie poprzedza curId w tym samym podmenu
-		var grp = rm_GrpById(curId);
 		
-		if (rm_PrzodekPotomek(dragId, curId) != 1 &&
-		dragId != curId && (lastPos == null || dragId != lastPos.id)) 
-			return true;
+		//curId jest id grupy
+		var dragGrpId = rm_PosById(dragId).idParent;
+		if ((dragGrpId == curId) || (rm_PrzodekPotomek(dragGrpId, curId, true) != 1 &&
+		    dragGrpId != curId && lastPos == null))
+			return true
 		else 
 			return false;
 	}
